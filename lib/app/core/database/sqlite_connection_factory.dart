@@ -23,6 +23,7 @@ class SqliteConnectionFactory {
     var databasePathFinal = p.join(databasePath, _DATABASE_NAME);
 
     if (_db == null) {
+      // Vai colocar o codigo de forma asyn assim uma nova solicitação de abertura de banco  de dados sempre vai esperar o porcesso em andamento
       await _lock.synchronized(() async {
         _db ??= await openDatabase(
           databasePathFinal,
@@ -42,7 +43,9 @@ class SqliteConnectionFactory {
     _db = null;
   }
 
-  Future<void> _onConfigure(Database db) async {}
+  Future<void> _onConfigure(Database db) async {
+    await _db!.execute("PRAGMA foreign_keys = ON");
+  }
 
   Future<void> _onCreate(Database db, int version) async {}
 
