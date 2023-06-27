@@ -7,8 +7,8 @@ class SqliteConnectionFactory {
   Database? _db;
   final _lock = Lock();
 
-  static const _VERSION = 1;
-  static const _DATABASE_NAME = 'TODO_LIST_PROVIDER';
+  static const _version = 1;
+  static const _databaseName = 'TODO_LIST_PROVIDER';
   static SqliteConnectionFactory? _instance;
 
   SqliteConnectionFactory._();
@@ -21,14 +21,14 @@ class SqliteConnectionFactory {
 
   Future<Database?> openConnection() async {
     var databasePath = await getDatabasesPath();
-    var databasePathFinal = p.join(databasePath, _DATABASE_NAME);
+    var databasePathFinal = p.join(databasePath, _databaseName);
 
     if (_db == null) {
       // Vai colocar o codigo de forma asyn assim uma nova solicitação de abertura de banco  de dados sempre vai esperar o porcesso em andamento
       await _lock.synchronized(() async {
         _db ??= await openDatabase(
           databasePathFinal,
-          version: _VERSION,
+          version: _version,
           onConfigure: _onConfigure,
           onCreate: _onCreate,
           onUpgrade: _onUpgrade,
@@ -45,7 +45,7 @@ class SqliteConnectionFactory {
   }
 
   Future<void> _onConfigure(Database db) async {
-    await _db!.execute("PRAGMA foreign_keys = ON");
+    await _db?.execute("PRAGMA foreign_keys = ON");
   }
 
   Future<void> _onCreate(Database db, int version) async {
