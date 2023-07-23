@@ -6,7 +6,7 @@ class MigrationV1 implements IMigration {
   void create(Batch batch) {
     batch.execute(''' 
       CREATE TABLE todo(
-        id INTEGER PRIMARY KEY AUTOINCREMET,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         descricao VARCHAR(500) NOT NULL,
         data_hora DATETIME,
         finalizado INTEGER
