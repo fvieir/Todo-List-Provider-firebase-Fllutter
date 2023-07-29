@@ -30,9 +30,14 @@ class LoginPage extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const TodoListField(),
+                            TodoListField(
+                              label: 'Nome',
+                            ),
                             const SizedBox(height: 20),
-                            const TodoListField(),
+                            TodoListField(
+                              label: 'E-mail',
+                              obscureText: true,
+                            ),
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
