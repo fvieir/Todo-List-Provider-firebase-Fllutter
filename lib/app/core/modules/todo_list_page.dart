@@ -16,7 +16,6 @@ class TodoListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('todo list page => $_bindings');
     return MultiProvider(
       providers: _bindings ??
           [
