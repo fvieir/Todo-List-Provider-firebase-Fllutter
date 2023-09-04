@@ -9,13 +9,13 @@ class UserRepositoryImpl implements IUserRepository {
       : _firebaseAuth = firebaseAuth;
 
   @override
-  Future<User> register(String email, String password) async {
+  Future<User?> register(String email, String password) async {
     try {
       final userCreate = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      return userCreate.user!;
-    } on FirebaseAuthException catch (e, s) {
+      return userCreate.user;
+    } on FirebaseAuthException catch (e) {
       if (e.email == 'email-already-exists') {
         var emailTypes = await _firebaseAuth.fetchSignInMethodsForEmail(email);
         if (emailTypes.contains('email-already-exists')) {

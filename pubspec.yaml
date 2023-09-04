@@ -36,6 +36,7 @@ dependencies:
   synchronized: ^3.0.0
   google_fonts: ^5.1.0
   sign_in_button:
+  validatorless: ^1.2.3
   firebase_auth: ^4.7.3
   firebase_core: ^2.15.1
 
