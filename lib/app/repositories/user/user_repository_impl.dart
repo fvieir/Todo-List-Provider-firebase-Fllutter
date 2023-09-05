@@ -16,7 +16,7 @@ class UserRepositoryImpl implements IUserRepository {
 
       return userCreate.user;
     } on FirebaseAuthException catch (e) {
-      if (e.email == 'email-already-exists') {
+      if (e.code == 'email-already-in-use') {
         var emailTypes = await _firebaseAuth.fetchSignInMethodsForEmail(email);
         if (emailTypes.contains('email-already-exists')) {
           throw AuthException(

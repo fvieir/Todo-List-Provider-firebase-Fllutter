@@ -5,6 +5,7 @@ import 'package:todo_list_with_provider_firebase/app/core/validator/validator.da
 import 'package:todo_list_with_provider_firebase/app/core/widget/todo_list_field.dart';
 import 'package:todo_list_with_provider_firebase/app/core/widget/todo_list_logo.dart';
 import 'package:todo_list_with_provider_firebase/app/modules/auth/register/register_controller.dart';
+import 'package:todo_list_with_provider_firebase/app/notifier/default_listener_notifier.dart';
 import 'package:validatorless/validatorless.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -22,21 +23,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void initState() {
-    context.read<RegisterController>().addListener(() {
-      final controller = context.read<RegisterController>();
-      if (controller.success) {
-        Navigator.of(context).pop();
-      }
+    DefaultListenerNotifier listenerNotifier = DefaultListenerNotifier(
+        changeNotifier: context.read<RegisterController>());
 
-      if (controller.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-            controller.error!,
-          ),
-          backgroundColor: Colors.red,
-        ));
-      }
-    });
+    listenerNotifier.listener(
+      context: context,
+      successCallback: (notifier, listenerInstance) {
+        listenerNotifier.dispose();
+        Navigator.of(context).pop();
+      },
+    );
 
     super.initState();
   }
@@ -46,7 +42,6 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailEC.dispose();
     _passwordEC.dispose();
     _confirmedPasswordEC.dispose();
-    context.read<RegisterController>().removeListener(() {});
     super.dispose();
   }
 
