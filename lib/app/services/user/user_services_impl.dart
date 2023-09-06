@@ -17,4 +17,14 @@ class UserServicesImpl implements IUserServices {
       throw AuthException(message: e.message);
     }
   }
+
+  @override
+  Future<User?> login(String email, String password) async {
+    try {
+      var user = await _userRepository.login(email, password);
+      return user;
+    } on AuthException catch (e) {
+      throw AuthException(message: e.message);
+    }
+  }
 }

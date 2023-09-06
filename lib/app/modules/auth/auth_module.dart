@@ -10,7 +10,8 @@ class AuthModule extends TodoListModules {
       : super(
           bindings: [
             ChangeNotifierProvider(
-              create: (context) => LoginController(),
+              create: (context) =>
+                  LoginController(userServices: context.read()),
             ),
             ChangeNotifierProvider(
               create: (context) =>
