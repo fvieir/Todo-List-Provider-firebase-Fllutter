@@ -48,4 +48,23 @@ class UserRepositoryImpl implements IUserRepository {
       throw AuthException(message: e.message ?? 'Senha ou usuário inválidos');
     }
   }
+
+  @override
+  Future<void> forgotPassword(String email) async {
+    try {
+      var loginMethods = await _firebaseAuth.fetchSignInMethodsForEmail(email);
+
+      if (loginMethods.contains('password')) {
+        _firebaseAuth.sendPasswordResetEmail(email: email);
+      } else if (loginMethods.contains('google')) {
+        throw AuthException(
+            message:
+                'Não é possível recuperar senha do Google. Acesse sua conta Google para trocar de senha.');
+      } else {
+        throw AuthException(message: 'E-mail não cadastrado');
+      }
+    } on PlatformException {
+      throw AuthException(message: 'Erro ao resetar senha');
+    }
+  }
 }

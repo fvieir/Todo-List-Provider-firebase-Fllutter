@@ -11,14 +11,21 @@ class DefaultListenerNotifier {
   void listener({
     required BuildContext context,
     required SuccessVoidCallback successCallback,
+    EverVoidCallback? everCallback,
   }) {
     changeNotifier.addListener(() {
+      // Respónsavel por mostrar mensagem de sucesso ao recuperar senha
+      if (everCallback != null) {
+        everCallback(changeNotifier, this);
+      }
+
       if (changeNotifier.loading) {
         Loader.show(context);
       } else {
         Loader.hide();
       }
 
+      // Respónsavel por mostrar mensagem de sucesso ao fazer login
       if (changeNotifier.isSuccess) {
         successCallback(changeNotifier, this);
       } else if (changeNotifier.error != null) {
@@ -33,4 +40,9 @@ class DefaultListenerNotifier {
 typedef SuccessVoidCallback = void Function(
   DefaultChangeNotifier notifier,
   DefaultListenerNotifier listenerInstance,
+);
+
+typedef EverVoidCallback = void Function(
+  DefaultChangeNotifier notifier,
+  DefaultListenerNotifier listenerNotifier,
 );
