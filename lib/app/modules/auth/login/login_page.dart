@@ -161,7 +161,12 @@ class _LoginPageState extends State<LoginPage> {
                                 borderSide: BorderSide.none,
                               ),
                               Buttons.google,
-                              onPressed: () {},
+                              onPressed: () {
+                                var email = _emailEC.text;
+                                context
+                                    .read<LoginController>()
+                                    .googleSignIn(email);
+                              },
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

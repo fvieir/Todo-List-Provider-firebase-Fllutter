@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:todo_list_with_provider_firebase/app/exception/auth_exception.dart';
 import 'package:todo_list_with_provider_firebase/app/repositories/user/user_repository_interface.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserRepositoryImpl implements IUserRepository {
   FirebaseAuth _firebaseAuth;
@@ -66,5 +67,54 @@ class UserRepositoryImpl implements IUserRepository {
     } on PlatformException {
       throw AuthException(message: 'Erro ao resetar senha');
     }
+  }
+
+  @override
+  Future<User?> googleSignIn(String email) async {
+    List<String>? loginMethods;
+    try {
+      final googleSignIn = GoogleSignIn();
+      final googleUser = await googleSignIn.signIn();
+
+      if (googleUser != null) {
+        loginMethods =
+            await _firebaseAuth.fetchSignInMethodsForEmail(googleUser.email);
+
+        if (loginMethods.contains('password')) {
+          throw AuthException(
+              message:
+                  'O metodo de login no Todo List para este e-mail é atráves de senha e usuário, caso tenha esquecido senha, clique em Esqueceu Senha.');
+        } else {
+          var googleAuth = await googleUser.authentication;
+          var firebaseCredential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+
+          var credentials =
+              await _firebaseAuth.signInWithCredential(firebaseCredential);
+          return credentials.user;
+        }
+      } else {
+        throw AuthException(
+            message:
+                'Por favor escolha alguma conta ou faça login com senha e usuário.');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-crendential') {
+        throw AuthException(message: '''
+          Login inválido, você se registrou no Todo List com seguintes provedores:
+          ${loginMethods?.join(',')}
+          ''');
+      } else {
+        throw AuthException(message: 'Algo deu errado');
+      }
+    }
+  }
+
+  @override
+  Future<void> googleSignOut(String email) async {
+    await GoogleSignIn().signOut();
+    await _firebaseAuth.signOut();
   }
 }

@@ -45,4 +45,25 @@ class LoginController extends DefaultChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> googleSignIn(String email) async {
+    try {
+      showLoadingAndResetState();
+      infoMessage = null;
+      notifyListeners();
+      var user = await _userServices.googleSignIn(email);
+      if (user != null) {
+        success();
+      } else {
+        await _userServices.googleSignOut(email);
+        setError('Algo deu errado');
+      }
+    } on AuthException catch (e) {
+      setError(e.message);
+      await _userServices.googleSignOut(email);
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
 }

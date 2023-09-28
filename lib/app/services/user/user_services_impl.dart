@@ -30,8 +30,27 @@ class UserServicesImpl implements IUserServices {
 
   @override
   Future<void> forgotPassword(String email) async {
-    await _userRepository.forgotPassword(email);
-    try {} on AuthException catch (e) {
+    try {
+      await _userRepository.forgotPassword(email);
+    } on AuthException catch (e) {
+      throw AuthException(message: e.message);
+    }
+  }
+
+  @override
+  Future<User?> googleSignIn(String email) async {
+    try {
+      return await _userRepository.googleSignIn(email);
+    } on AuthException catch (e) {
+      throw AuthException(message: e.message);
+    }
+  }
+
+  @override
+  Future<void> googleSignOut(String email) async {
+    try {
+      await _userRepository.googleSignOut(email);
+    } on AuthException catch (e) {
       throw AuthException(message: e.message);
     }
   }
