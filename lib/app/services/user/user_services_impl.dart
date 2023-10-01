@@ -47,9 +47,9 @@ class UserServicesImpl implements IUserServices {
   }
 
   @override
-  Future<void> googleSignOut(String email) async {
+  Future<void> signOut() async {
     try {
-      await _userRepository.googleSignOut(email);
+      await _userRepository.signOut();
     } on AuthException catch (e) {
       throw AuthException(message: e.message);
     }

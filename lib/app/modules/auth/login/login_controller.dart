@@ -55,12 +55,12 @@ class LoginController extends DefaultChangeNotifier {
       if (user != null) {
         success();
       } else {
-        await _userServices.googleSignOut(email);
+        await _userServices.signOut();
         setError('Algo deu errado');
       }
     } on AuthException catch (e) {
       setError(e.message);
-      await _userServices.googleSignOut(email);
+      await _userServices.signOut();
     } finally {
       hideLoading();
       notifyListeners();

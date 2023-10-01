@@ -5,5 +5,5 @@ abstract class IUserServices {
   Future<User?> login(String email, String password);
   Future<void> forgotPassword(String email);
   Future<User?> googleSignIn(String email);
-  Future<void> googleSignOut(String email);
+  Future<void> signOut();
 }
